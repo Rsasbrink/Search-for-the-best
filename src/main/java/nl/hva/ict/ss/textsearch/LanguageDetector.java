@@ -32,10 +32,15 @@ public final class LanguageDetector {
 
     }
 
+    void getMethodStats() {
+        System.out.println(content);
+        String pattern = "^\\s*(?:^\\s*([a-zA-Z_]\\w+)\\s*\\(\\s*|\\G,\\s*)(\\s*([a-zA-Z_]\\w+)\\s+([a-zA-Z_]\\w+),?)*\\)\\s*$";
+        
+    }
+
     public boolean isEnglish() {
         setupDoc();
         getLetterFrequency(docContent);
-
         System.out.println("letter \t dutch \t\t\t text \t\t\t\t english ");
         letterFrequency.entrySet().forEach((pair) -> {
             Character key = pair.getKey();
@@ -43,7 +48,7 @@ public final class LanguageDetector {
             Double dutchValue = dutchLetterFrequency.get(key);
             Double englishValue = EnglishLetterFrequency.get(key);
             double closest = closer(dutchValue, englishValue, value);
-            String dutchIndicator = "";            
+            String dutchIndicator = "";
             String englishIndicator = "";
 
             if (dutchValue == closest) {
@@ -53,8 +58,8 @@ public final class LanguageDetector {
                 englishScore++;
                 englishIndicator = "->";
             }
-            System.out.println(key + " \t " + dutchValue + " \t\t\t " +dutchIndicator+value+englishIndicator+ " \t\t\t " + englishValue);
-            
+            System.out.println(key + " \t " + dutchValue + " \t\t\t " + dutchIndicator + value + englishIndicator + " \t\t\t " + englishValue);
+
         }
         );
         System.out.println("dutch; " + dutchScore + " english; " + englishScore);
@@ -78,7 +83,6 @@ public final class LanguageDetector {
         }
         letterFrequency.entrySet().forEach((pair) -> {
             double value = pair.getValue();
-            DecimalFormat df = new DecimalFormat("###.##");
             double percentage = value / docContentLength * 100;
             percentage = Math.round(percentage * 100.0) / 100.0;
             letterFrequency.put(pair.getKey(), percentage);
@@ -134,6 +138,7 @@ public final class LanguageDetector {
         }
     }
 
+    // https://en.wikipedia.org/wiki/Letter_frequency
     private void setupDutchLetterFrequency() {
         dutchLetterFrequency.put('e', Math.round(18.91 * 100.0) / 100.0);
         dutchLetterFrequency.put('n', Math.round(10.032 * 100.0) / 100.0);
