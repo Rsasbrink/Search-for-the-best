@@ -17,6 +17,7 @@ public class LanguageDetectorTest {
     // Add your tests here. They are allowed to NOT use assertXxxx... :-)
     @Test
     public void cantFindOccurrence() {
-        detector.isEnglish();
+        boolean isEnglish = detector.isEnglish();
+        assertEquals(isEnglish, true);
     }
 }
