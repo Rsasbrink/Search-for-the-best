@@ -6,7 +6,7 @@ package nl.hva.ict.ss.textsearch;
 
 public class BoyerMoore {
     private final int R;     // the radix
-    private int[] right;     // the bad-character skip array
+    private int[] right;     // the bad-character skip array        
 
     private char[] pattern;  // store the pattern as a character array
     private String pat;      // or as a string
@@ -39,21 +39,51 @@ public class BoyerMoore {
      * @return the index of the first occurrence of the pattern string
      *         in the text string; n if no such match
      */
-    public int search(String txt) {
+    public int searchLeft(String txt) {
         int m = pat.length();
         int n = txt.length();
+        int charCompares = 0;
+        int skip;
+        for (int i = 0; i <= n - m; i += skip) {
+            skip = 0;
+            for (int j = m-1; j >= 0; j--) {
+                if (pat.charAt(j) != txt.charAt(i+j)) {
+                    skip = Math.max(1, j - right[txt.charAt(i+j)]);
+                    charCompares++;
+                    break;
+                }
+                charCompares++;
+            }
+            if (skip == 0) {
+                System.out.println("CHAR compares Left: " + charCompares);
+                return i;
+            }    // found
+        }
+        System.out.println("CHAR compares Left: " + charCompares);
+        return n;
+    }
+    public int searchRight(String txt) {
+        int m = pat.length();
+        int n = txt.length();
+        int charCompares = 0;
         int skip;
         for (int i = n - m; i >= 0; i -= skip) {
             skip = 0;
             for (int j = 0; j <= m-1; j++) {
-                if (pat.charAt(j) != txt.charAt(i+j)) {
-                    skip = Math.max(1, j - right[txt.charAt(i+j)]);
+                if (pat.charAt(j) != txt.charAt(i-j)) {
+                    skip = Math.max(1, j - right[txt.charAt(i-j)]);
+                    charCompares++;
                     break;
                 }
+                charCompares++;
             }
-            if (skip == 0) return i;    // found
+            if (skip == 0) {
+                System.out.println("CHAR compares Right: " + charCompares);
+                return i;
+            }    // found
         }
-        return n;                       // not found
+        System.out.println("CHAR compares Right: " + charCompares);
+        return n;
     }
 
      /**
@@ -65,14 +95,19 @@ public class BoyerMoore {
      */
     public static void main(String[] args) {
         String pattern = "ABC";
-        String text = "BBBBBBBBBBBABBBBBBABCCCCC";
+        String text = "BBBBBBBVAKVNZXNCJASHDJASHJASHDHFJAHFJAHFJAHSDJBBBAAAAAASDASDASDASASDADBVBVACACSSACASCAAABCABCABCABCBABCBABBABCCCCCNNCNJAJSASDADASCVXCXZCSJASDHHAJDHAJSDH";
         BoyerMoore boyermoore = new BoyerMoore(pattern);
-        int indexOfset = boyermoore.search(text);
+        int indexRight = boyermoore.searchRight(text);
+        int indexLeft = boyermoore.searchLeft(text);
+        System.out.println("Input text:          " + text);
+        System.out.print("Found pattern Right: ");
+        for (int i = 0; i < indexRight; i++) {
+            System.out.print(" ");
+        }
+        System.out.println(pattern);
+                System.out.print("Found pattern left:  ");
 
-        System.out.println("Input text:    " + text);
-
-        System.out.print("Found pattern: ");
-        for (int i = 0; i < indexOfset; i++) {
+        for (int i = 0; i < indexLeft; i++) {
             System.out.print(" ");
         }
         System.out.println(pattern);
