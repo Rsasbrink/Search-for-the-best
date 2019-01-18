@@ -14,10 +14,14 @@ public class LanguageDetectorTest {
 
     }
 
-    // Add your tests here. They are allowed to NOT use assertXxxx... :-)
+//    // Add your tests here. They are allowed to NOT use assertXxxx... :-)
+//    @Test
+//    public void isJavaDocEnglish() {
+//        boolean isEnglish = detector.isEnglish();
+//        assertEquals(isEnglish, true);
+//    }
     @Test
-    public void cantFindOccurrence() {
-        boolean isEnglish = detector.isEnglish();
-        assertEquals(isEnglish, true);
+    public void getAllmethodsAndAmounts(){
+        detector.getMethodStats();
     }
 }
