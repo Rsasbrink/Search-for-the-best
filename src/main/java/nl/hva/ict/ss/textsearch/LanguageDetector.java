@@ -15,12 +15,14 @@ public final class LanguageDetector {
 
     private String content; // Once an instance is created this will hold the complete content of the file.
     private String docContent = "";
+    private String methodContent = "";
+    private int methodCount;
     private int docContentLength;
     HashMap<Character, Double> letterFrequency = new HashMap<>();
     HashMap<Character, Double> dutchLetterFrequency = new HashMap<>();
     HashMap<Character, Double> EnglishLetterFrequency = new HashMap<>();
-    int englishScore;
-    int dutchScore;
+    private int englishScore;
+    private int dutchScore;
 
     public LanguageDetector(InputStream input) {
         Scanner sc = new Scanner(input);
@@ -33,9 +35,22 @@ public final class LanguageDetector {
     }
 
     void getMethodStats() {
-        System.out.println(content);
-        String pattern = "^\\s*(?:^\\s*([a-zA-Z_]\\w+)\\s*\\(\\s*|\\G,\\s*)(\\s*([a-zA-Z_]\\w+)\\s+([a-zA-Z_]\\w+),?)*\\)\\s*$";
-        
+        Scanner methodScanner = new Scanner(content);
+        methodScanner.useDelimiter("\\Z"); // EOF marker
+
+        while (methodScanner.hasNextLine()) {
+            String line = methodScanner.nextLine().trim();
+            Pattern pattern = Pattern.compile("(.*)(\\.[\\s\\n]*[\\w]+)+(?=\\(.*\\))+(.*)");
+            Matcher m = pattern.matcher(line);
+            boolean match = m.matches();
+            if (match) {
+                methodContent += line + "\n";
+                methodCount++;
+            }
+
+        }
+        System.out.println(methodContent);
+        System.out.println(methodCount);
     }
 
     public boolean isEnglish() {
@@ -66,6 +81,7 @@ public final class LanguageDetector {
         return englishScore > dutchScore;
     }
 
+    // See frequency from every letter in the JavaDoc
     public void getLetterFrequency(String stringContent) {
         for (int i = 0; i < stringContent.length(); i++) {
             char c = stringContent.charAt(i);
@@ -81,6 +97,7 @@ public final class LanguageDetector {
             }
 
         }
+        // Calculate percentage per letter
         letterFrequency.entrySet().forEach((pair) -> {
             double value = pair.getValue();
             double percentage = value / docContentLength * 100;
@@ -89,12 +106,14 @@ public final class LanguageDetector {
         });
     }
 
+    // Convert to lowercase for easy regex
     public String convertToLowerCase(String content) {
         String lowerContent;
         lowerContent = content.toLowerCase();
         return lowerContent;
     }
 
+    // Read content ald filter the javaDoc out of it, and removes * and / 
     private void setupDoc() {
         Scanner docScanner = new Scanner(content);
         docScanner.useDelimiter("\\Z"); // EOF marker
