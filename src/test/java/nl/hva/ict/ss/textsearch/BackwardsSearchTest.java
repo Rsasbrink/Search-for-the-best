@@ -10,7 +10,7 @@ public class BackwardsSearchTest {
     protected BackwardsSearch searchEngine;
     String pattern = "needle";
     String textMoreLeft = "neeedeeeelnneeeldleneedllllleeewhereistheneedleinthishaystackneedllllleee";
-    String textMoreRight = "needllllleeewhereistheneedleinthishaystackneedllllleee";
+    String textMoreRight = "needllllleeewhereiaaadcxczczczxceqasdgacascxczczxcxzcxzcxzcxcvzcvzxcxvzvzxvzvstheneedleinthishaystackneedllllleee";
     String text = "whereistheneedleinthishaystack";
     String textFail = "thereisnothinginthishaystack";
 
