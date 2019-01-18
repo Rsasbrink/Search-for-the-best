@@ -50,7 +50,7 @@ public final class LanguageDetector {
 
         }
         System.out.println(methodContent);
-        System.out.println(methodCount);
+        System.out.println("amount of calls" + methodCount);
     }
 
     public boolean isEnglish() {
